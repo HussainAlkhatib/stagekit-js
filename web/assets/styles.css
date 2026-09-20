@@ -30,7 +30,13 @@ body {
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
+
+/* Grid children default to min-width:auto, so long code lines push columns
+   wider than the viewport. Allow them to shrink instead. */
+.block, .overview, .bench, .pane, .duo, .code-pane, .bars, .stats { min-width: 0; }
+.bench > *, .duo > *, .stats > * { min-width: 0; }
 
 ::selection { background: var(--amber); color: #0a0a0b; }
 
@@ -292,13 +298,41 @@ main, header.bar, footer.foot, .marquee { position: relative; z-index: 1; }
   .bench { grid-template-columns: 1fr; }
   .duo { grid-template-columns: 1fr; }
   .stats { grid-template-columns: 1fr 1fr; }
+  .pane { min-height: 0; }
+  .pane-out { min-height: 0; }
+}
+@media (max-width: 720px) {
+  .overview { padding: 48px 18px 40px; }
+  .block { padding: 48px 18px; }
+  .overview h1 { font-size: clamp(2rem, 9vw, 3rem); }
 }
 @media (max-width: 560px) {
+  body { font-size: 13.5px; }
+  .bar { padding: 10px 14px; gap: 10px; }
+  .bar-nav { gap: 12px; }
   .bar-nav a:not(.ext) { display: none; }
-  .bar { padding: 10px 16px; }
-  .overview, .block { padding-left: 16px; padding-right: 16px; }
-  .bar-row { grid-template-columns: 84px 1fr 54px; gap: 10px; }
+  .overview, .block { padding-left: 14px; padding-right: 14px; }
+  .overview { padding-top: 40px; padding-bottom: 36px; }
+  .overview h1 { font-size: 2rem; line-height: 1.02; }
+  .install-row { gap: 8px; }
+  .install { font-size: 0.82rem; padding: 9px 12px; }
+  .readout-body { min-height: 0; padding: 14px; }
+  .stats { grid-template-columns: 1fr; }
+  .stat { padding: 16px; }
+  .bar-row { grid-template-columns: 78px 1fr 48px; gap: 8px; padding: 10px 12px; }
+  .bar-name { font-size: 0.76rem; }
+  .bar-n { font-size: 0.76rem; }
+  .code { font-size: 0.72rem; padding: 12px; }
+  .code-head { padding: 8px 12px; }
+  .output, #input { font-size: 0.82rem; }
+  .pipeline .p-id { display: none; }
+  .foot { padding: 22px 14px; gap: 10px; }
+  .foot-right { margin-left: 0; width: 100%; }
 }
+
+/* Code blocks: scroll horizontally instead of blowing out the layout. */
+.code { max-width: 100%; }
+.code-pane, .duo { max-width: 100%; }
 
 @media (prefers-reduced-motion: reduce) {
   .caret, .dot, .marquee-track { animation: none; }
