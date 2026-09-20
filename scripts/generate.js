@@ -5,7 +5,6 @@ const path = require('path');
 
 const OUT = path.join(__dirname, '..', 'src', 'modules');
 const DOCS = path.join(__dirname, '..', 'docs');
-const COUNT = 978;
 
 const j = JSON.stringify;
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
@@ -276,11 +275,7 @@ for (const spec of interleaved) {
   unique.push(spec);
 }
 
-if (unique.length < COUNT) {
-  throw new Error('not enough unique stages: ' + unique.length + ' < ' + COUNT);
-}
-
-const chosen = unique.slice(0, COUNT);
+const chosen = unique;
 
 fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });

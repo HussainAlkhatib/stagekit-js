@@ -120,7 +120,7 @@ const pipe = createPipeline([trim /* ... */]);
 ```js
 const { registry } = require('stagekit-js');
 
-registry.size;                    // 978
+registry.size;                    // 4658
 registry.search('caesar');        // 25 shift variants
 registry.findByPrefix('mod-00');  // the first slice of the catalog
 registry.nextId();                // the first free id

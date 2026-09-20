@@ -6,7 +6,7 @@ everything else is data.
 ## The big picture
 
 ```
-                 src/modules/*.js  (978 stage modules)
+                 src/modules/*.js  (4658 stage modules)
                           |
                           v
    src/modules/index.js  (barrel: one require per module)

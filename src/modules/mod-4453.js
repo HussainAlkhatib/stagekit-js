@@ -1,0 +1,10 @@
+'use strict';
+
+const { defineStage } = require('../core/registry');
+
+module.exports = defineStage({
+  id: "mod-4453",
+  name: "Replace \"6\" with \"M\"",
+  description: "Replaces every 6 with M.",
+  run: (value) => String(value).split("6").join("M"),
+});
