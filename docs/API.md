@@ -111,7 +111,7 @@ pipeline('Hello');
 
 ## stages
 
-The raw array of all 980 stage objects, as exported by the barrel. Same
+The raw array of all 978 stage objects, as exported by the barrel. Same
 contents as `registry.list()`.
 
 ---

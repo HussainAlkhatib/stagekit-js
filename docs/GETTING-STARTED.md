@@ -83,5 +83,5 @@ module.exports = defineStage({
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - how the pieces fit together.
 - [API.md](./API.md) - every exported function, documented.
 - [RECIPES.md](./RECIPES.md) - real-world pipelines you can copy.
-- [CATALOG.md](./CATALOG.md) - the full list of 980 stages.
+- [CATALOG.md](./CATALOG.md) - the full list of 978 stages.
 - [FAQ.md](./FAQ.md) - answers to the questions everyone asks.

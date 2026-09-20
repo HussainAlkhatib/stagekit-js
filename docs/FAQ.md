@@ -2,7 +2,7 @@
 
 ## What is StageKit, in one sentence?
 
-A library of 980 small, pure string transformations that you snap together
+A library of 978 small, pure string transformations that you snap together
 into a pipeline.
 
 ## Why are stages numbered instead of named?
@@ -26,7 +26,7 @@ size, e.g. `mod-0982`. The format is always `mod-` plus four digits.
 
 ## Why does the demo `pipeline` produce garbage?
 
-Because it runs **all** 980 stages in id order, and later stages are not
+Because it runs **all** 978 stages in id order, and later stages are not
 meant to follow earlier ones. It exists as a smoke test. Real code builds an
 explicit pipeline with `createPipeline`.
 

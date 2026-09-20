@@ -5,7 +5,7 @@ const path = require('path');
 
 const OUT = path.join(__dirname, '..', 'src', 'modules');
 const DOCS = path.join(__dirname, '..', 'docs');
-const COUNT = 980;
+const COUNT = 978;
 
 const j = JSON.stringify;
 const ALPHABET = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');

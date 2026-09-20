@@ -979,6 +979,4 @@ module.exports = [
   require('./mod-0976'),
   require('./mod-0977'),
   require('./mod-0978'),
-  require('./mod-0979'),
-  require('./mod-0980'),
 ];

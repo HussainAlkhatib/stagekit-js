@@ -45,8 +45,8 @@ test('main entry exists', () => {
 
 // --- catalog ------------------------------------------------------------
 
-test('catalog has 980 stages', () => {
-  assert.strictEqual(stages.length, 980);
+test('catalog has 978 stages', () => {
+  assert.strictEqual(stages.length, 978);
 });
 
 test('every stage id is unique', () => {

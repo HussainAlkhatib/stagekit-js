@@ -984,6 +984,4 @@ The full, authoritative list of every stage, in id order.
 | `mod-0976` | Pad start to 32 with "~" | Left-pads the value to width 32 with "~". |
 | `mod-0977` | Pad end to 32 with "~" | Right-pads the value to width 32 with "~". |
 | `mod-0978` | Replace "d" with "X" | Replaces every d with X. |
-| `mod-0979` | Pad start to 32 with "=" | Left-pads the value to width 32 with "=". |
-| `mod-0980` | Pad end to 32 with "=" | Right-pads the value to width 32 with "=". |
 

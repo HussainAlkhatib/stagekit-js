@@ -1,6 +1,6 @@
 # stagekit-js
 
-`stagekit-js` is a catalog of 980 composable, pure string-transformation
+`stagekit-js` is a catalog of 978 composable, pure string-transformation
 stages. Each stage is a small module under `src/modules/` that exports a
 frozen definition via `defineStage`. Stages can be composed into a pipeline
 and run from code or from the command line.
@@ -18,7 +18,7 @@ const { registry, createPipeline } = require('stagekit-js');
 
 const pipe = createPipeline(registry.search('slug'));
 
-console.log(registry.size); // 980
+console.log(registry.size); // 978
 console.log(pipe('Hello World'));
 ```
 
@@ -43,6 +43,7 @@ See [docs/CLI.md](./docs/CLI.md) for the full command reference.
 - [Recipes](./docs/RECIPES.md)
 - [CLI](./docs/CLI.md)
 - [FAQ](./docs/FAQ.md)
+- [Releasing](./docs/RELEASING.md)
 - [Full catalog](./docs/CATALOG.md)
 
 ## Scripts

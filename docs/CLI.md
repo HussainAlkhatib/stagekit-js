@@ -28,7 +28,7 @@ Print every stage as `id`, `name` and `description`.
 stagekit list --limit 5
 # mod-0001  Prefix "-"    Prepends - to the value.
 # ...
-# 5 of 980 stages
+# 5 of 978 stages
 ```
 
 ### `stagekit search <query>`
@@ -53,7 +53,7 @@ stagekit show mod-0039
 Print the number of registered stages.
 
 ```bash
-stagekit count   # 980
+stagekit count   # 978
 ```
 
 ### `stagekit run [stages...] [--text <string>] [--limit N]`
