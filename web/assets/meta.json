@@ -1,0 +1,70 @@
+{
+  "count": 4658,
+  "categories": [
+    {
+      "name": "Affix",
+      "count": 42
+    },
+    {
+      "name": "Case",
+      "count": 7
+    },
+    {
+      "name": "Cipher",
+      "count": 25
+    },
+    {
+      "name": "Compose",
+      "count": 22
+    },
+    {
+      "name": "Encoding",
+      "count": 10
+    },
+    {
+      "name": "Indent",
+      "count": 8
+    },
+    {
+      "name": "Lines",
+      "count": 43
+    },
+    {
+      "name": "Mask",
+      "count": 12
+    },
+    {
+      "name": "Other",
+      "count": 3
+    },
+    {
+      "name": "Pad",
+      "count": 592
+    },
+    {
+      "name": "Repeat",
+      "count": 9
+    },
+    {
+      "name": "Replace",
+      "count": 3782
+    },
+    {
+      "name": "Slug",
+      "count": 8
+    },
+    {
+      "name": "Truncate",
+      "count": 80
+    },
+    {
+      "name": "Whitespace",
+      "count": 8
+    },
+    {
+      "name": "Wrap",
+      "count": 7
+    }
+  ],
+  "generatedAt": "2026-09-20T22:18:16.194Z"
+}

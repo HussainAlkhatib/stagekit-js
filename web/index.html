@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>stagekit-js - 4658 composable string-transform stages</title>
+  <meta name="description" content="A catalog of 4658 small, pure string-transformation stages. Compose them into a pipeline and run them from code, the CLI, or right here in the browser." />
+  <meta name="color-scheme" content="dark light" />
+  <meta property="og:title" content="stagekit-js" />
+  <meta property="og:description" content="4658 composable, pure string-transformation stages with a pipeline API and CLI." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://hussainalkhatib.github.io/stagekit-js/" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%A7%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="./assets/styles.css" />
+</head>
+<body>
+  <a class="skip" href="#demo">Skip to the live demo</a>
+
+  <header class="hero">
+    <nav class="nav">
+      <span class="brand"><span class="brand-mark">&#9672;</span> stagekit<span class="brand-dim">-js</span></span>
+      <div class="nav-links">
+        <a href="#demo">Demo</a>
+        <a href="#stages">Stages</a>
+        <a href="#usage">Usage</a>
+        <a href="#cli">CLI</a>
+        <a class="gh" href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">GitHub &#8599;</a>
+      </div>
+    </nav>
+
+    <div class="hero-inner">
+      <p class="eyebrow">pure &middot; composable &middot; zero&#8209;dependency</p>
+      <h1>Snap together<br /><span class="grad">string transformations.</span></h1>
+      <p class="lede">
+        <strong>stagekit-js</strong> is a catalog of
+        <span class="stat" id="hero-count">4,658</span> small, pure
+        string&#8209;transformation stages. Each one does exactly one thing.
+        Chain them into a pipeline and run them from code, from the command
+        line &mdash; or try it live below.
+      </p>
+
+      <div class="install">
+        <code>npm install stagekit-js</code>
+        <button class="copy" data-copy="npm install stagekit-js" aria-label="Copy install command">Copy</button>
+      </div>
+
+      <div class="hero-cta">
+        <a class="btn primary" href="#demo">Try the live demo</a>
+        <a class="btn" href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">View source</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="demo" class="section">
+      <div class="section-head">
+        <h2>Live demo</h2>
+        <p>The stages below run <em>in your browser</em>, on the same logic as the npm package. Type an input, then add stages to build a pipeline.</p>
+      </div>
+
+      <div class="demo">
+        <div class="demo-col">
+          <label class="field-label" for="input">Input</label>
+          <textarea id="input" rows="4" spellcheck="false">  Hello   WORLD -- My First Article!!  </textarea>
+
+          <label class="field-label" for="stage-search">Add a stage</label>
+          <div class="search-wrap">
+            <input id="stage-search" type="text" placeholder="Search 4,658 stages - e.g. slug, base64, caesar..." autocomplete="off" />
+            <ul id="suggestions" class="suggestions" hidden></ul>
+          </div>
+
+          <div class="quick">
+            <span>Quick add:</span>
+            <button class="chip" data-add="Uppercase">Uppercase</button>
+            <button class="chip" data-add='Slug with "-"'>Slug</button>
+            <button class="chip" data-add="Base64 encode">Base64</button>
+            <button class="chip" data-add="Reverse characters">Reverse</button>
+            <button class="chip" data-add="Caesar shift +1">Caesar</button>
+          </div>
+        </div>
+
+        <div class="demo-col">
+          <div class="pipeline-head">
+            <label class="field-label">Pipeline</label>
+            <button id="clear" class="link-btn">clear</button>
+          </div>
+          <ol id="pipeline" class="pipeline"></ol>
+          <p id="pipeline-empty" class="empty-hint">No stages yet - search above or use a quick&#8209;add chip.</p>
+        </div>
+
+        <div class="demo-col output-col">
+          <label class="field-label">Output</label>
+          <pre id="output" class="output"></pre>
+          <div class="output-actions">
+            <button class="copy" data-copy-target="output">Copy output</button>
+            <span id="output-status" class="status"></span>
+          </div>
+        </div>
+      </div>
+
+      <details class="as-code">
+        <summary>Equivalent code</summary>
+        <pre id="code-out" class="code"></pre>
+      </details>
+    </section>
+
+    <section id="stages" class="section">
+      <div class="section-head">
+        <h2>What's inside</h2>
+        <p><span id="stage-count">4,658</span> stages across <span id="cat-count">16</span> families. Every name and behaviour is unique - enforced by the test suite.</p>
+      </div>
+      <div id="categories" class="categories"></div>
+    </section>
+
+    <section id="usage" class="section">
+      <div class="section-head"><h2>Use it from code</h2></div>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Compose a pipeline</h3>
+          <pre class="code"><code>const { registry, createPipeline } = require('stagekit-js');
+
+const pipe = createPipeline([
+  registry.findByName('Trim lines')[0],
+  registry.findByName('Slug with "-"')[0],
+]);
+
+pipe('  Hello   World  ');
+// -&gt; 'hello-world'</code></pre>
+        </div>
+        <div class="card">
+          <h3>Search the registry</h3>
+          <pre class="code"><code>registry.size;            // 4658
+registry.search('caesar'); // every caesar stage
+registry.get('mod-0002'); // one exact stage
+
+registry.search('slug')[0].run('My Post');
+// -&gt; 'my-post'</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="cli" class="section">
+      <div class="section-head">
+        <h2>Or from the terminal</h2>
+        <p>Installing the package also installs the <code>stagekit</code> command.</p>
+      </div>
+      <pre class="code cli"><code><span class="c-dim">$</span> echo "My Article Title" | stagekit run <span class="c-s">'Slug with "-"'</span> <span class="c-s">'Base64 encode'</span>
+bXktYXJ0aWNsZS10aXRsZQ==
+
+<span class="c-dim">$</span> stagekit search caesar
+25 match(es)
+
+<span class="c-dim">$</span> stagekit show mod-0002
+id          mod-0002
+name        Caesar shift +1
+description Shifts latin letters forward by 1.</code></pre>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <p><strong>stagekit-js</strong> &middot; MIT &middot; built by <a href="https://github.com/HussainAlkhatib" target="_blank" rel="noopener">Hussain Alkhatib</a></p>
+      <p class="footer-links">
+        <a href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">Source</a>
+        <a href="https://github.com/HussainAlkhatib/stagekit-js/blob/main/docs/GETTING-STARTED.md" target="_blank" rel="noopener">Docs</a>
+        <a href="https://github.com/HussainAlkhatib/stagekit-js/blob/main/docs/CATALOG.md" target="_blank" rel="noopener">Catalog</a>
+      </p>
+    </div>
+  </footer>
+
+  <script src="./assets/stages.js"></script>
+  <script src="./assets/app.js"></script>
+</body>
+</html>

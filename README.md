@@ -1,5 +1,8 @@
 # stagekit-js
 
+**[Live site & demo »](https://hussainalkhatib.github.io/stagekit-js/)** — try the
+stages right in your browser.
+
 `stagekit-js` is a catalog of 4658 composable, pure string-transformation
 stages. Each stage is a small module under `src/modules/` that exports a
 frozen definition via `defineStage`. Stages can be composed into a pipeline
