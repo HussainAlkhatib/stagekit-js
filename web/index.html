@@ -3,120 +3,156 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>stagekit-js - 4658 composable string-transform stages</title>
-  <meta name="description" content="A catalog of 4658 small, pure string-transformation stages. Compose them into a pipeline and run them from code, the CLI, or right here in the browser." />
-  <meta name="color-scheme" content="dark light" />
-  <meta property="og:title" content="stagekit-js" />
-  <meta property="og:description" content="4658 composable, pure string-transformation stages with a pipeline API and CLI." />
-  <meta property="og:type" content="website" />
+  <title>stagekit / string transformation workbench</title>
+  <meta name="description" content="4,658 pure, composable string-transformation stages. Chain them into a pipeline, run them from code, the CLI, or live in the browser." />
+  <meta name="color-scheme" content="dark" />
+  <meta property="og:title" content="stagekit / string transformation workbench" />
+  <meta property="og:description" content="4,658 pure, composable string-transformation stages." />
   <meta property="og:url" content="https://hussainalkhatib.github.io/stagekit-js/" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%A7%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0b'/%3E%3Ctext x='4' y='23' font-family='monospace' font-size='20' fill='%23ffb224'%3E%3E%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="./assets/styles.css" />
 </head>
 <body>
-  <a class="skip" href="#demo">Skip to the live demo</a>
+  <div class="draft" aria-hidden="true"></div>
 
-  <header class="hero">
-    <nav class="nav">
-      <span class="brand"><span class="brand-mark">&#9672;</span> stagekit<span class="brand-dim">-js</span></span>
-      <div class="nav-links">
-        <a href="#demo">Demo</a>
-        <a href="#stages">Stages</a>
-        <a href="#usage">Usage</a>
-        <a href="#cli">CLI</a>
-        <a class="gh" href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">GitHub &#8599;</a>
-      </div>
+  <header class="bar">
+    <a class="mark" href="#top">
+      <span class="mark-glyph">&gt;</span> stagekit
+    </a>
+    <span class="bar-tag">v1.0.0</span>
+    <nav class="bar-nav">
+      <a href="#workbench">workbench</a>
+      <a href="#registry">registry</a>
+      <a href="#api">api</a>
+      <a class="ext" href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">source&nbsp;&#8599;</a>
     </nav>
-
-    <div class="hero-inner">
-      <p class="eyebrow">pure &middot; composable &middot; zero&#8209;dependency</p>
-      <h1>Snap together<br /><span class="grad">string transformations.</span></h1>
-      <p class="lede">
-        <strong>stagekit-js</strong> is a catalog of
-        <span class="stat" id="hero-count">4,658</span> small, pure
-        string&#8209;transformation stages. Each one does exactly one thing.
-        Chain them into a pipeline and run them from code, from the command
-        line &mdash; or try it live below.
-      </p>
-
-      <div class="install">
-        <code>npm install stagekit-js</code>
-        <button class="copy" data-copy="npm install stagekit-js" aria-label="Copy install command">Copy</button>
-      </div>
-
-      <div class="hero-cta">
-        <a class="btn primary" href="#demo">Try the live demo</a>
-        <a class="btn" href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">View source</a>
-      </div>
-    </div>
   </header>
 
-  <main>
-    <section id="demo" class="section">
-      <div class="section-head">
-        <h2>Live demo</h2>
-        <p>The stages below run <em>in your browser</em>, on the same logic as the npm package. Type an input, then add stages to build a pipeline.</p>
+  <main id="top">
+    <!-- ================= OVERVIEW ================= -->
+    <section class="overview">
+      <div class="overview-copy">
+        <p class="label">[ 00 ] &nbsp;overview</p>
+        <h1>
+          <span class="line"><span id="hero-count">4,658</span> ways</span>
+          <span class="line">to bend</span>
+          <span class="line">a string.<span class="caret"></span></span>
+        </h1>
+        <p class="dek">
+          A catalogue of small, pure transformations. Each one does a single
+          thing to a string. Snap them together into a pipeline and run the
+          whole chain from your code, your shell, or right here.
+        </p>
+
+        <div class="install-row">
+          <code class="install"><span class="prompt">$</span> npm i stagekit-js</code>
+          <button class="copy" data-copy="npm i stagekit-js">copy</button>
+          <a class="jump" href="#workbench">open workbench &#8595;</a>
+        </div>
       </div>
 
-      <div class="demo">
-        <div class="demo-col">
-          <label class="field-label" for="input">Input</label>
-          <textarea id="input" rows="4" spellcheck="false">  Hello   WORLD -- My First Article!!  </textarea>
+      <aside class="readout" aria-hidden="true">
+        <div class="readout-bar">
+          <span class="dot"></span> live
+          <span class="readout-tag">auto&#8209;demo</span>
+        </div>
+        <div class="readout-body">
+          <div class="ro-line"><span class="ro-k">in</span><span class="ro-v" id="auto-in"></span></div>
+          <div class="ro-wire"><span id="auto-stage">&mdash;</span></div>
+          <div class="ro-line"><span class="ro-k">out</span><span class="ro-v out" id="auto-out"></span></div>
+        </div>
+        <div class="readout-foot">
+          <span id="auto-id">mod-0000</span>
+          <span id="auto-count">0 stages</span>
+        </div>
+      </aside>
+    </section>
 
-          <label class="field-label" for="stage-search">Add a stage</label>
+    <!-- ================= MARQUEE ================= -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marquee-track"></div>
+    </div>
+
+    <!-- ================= WORKBENCH ================= -->
+    <section id="workbench" class="block">
+      <div class="block-head">
+        <p class="label">[ 01 ] &nbsp;workbench</p>
+        <h2>Build a pipeline</h2>
+        <p class="block-sub">
+          Every stage below is the real function, evaluated in your browser.
+          Feed it text, stack transformations, read the result.
+        </p>
+      </div>
+
+      <div class="bench">
+        <div class="pane pane-in">
+          <div class="pane-head"><span class="pane-n">a</span> input</div>
+          <textarea id="input" spellcheck="false">  Hello   WORLD -- My First Article!!  </textarea>
+          <div class="chips">
+            <button class="chip" data-add="Uppercase">uppercase</button>
+            <button class="chip" data-add='Slug with "-"'>slug</button>
+            <button class="chip" data-add="Base64 encode">base64</button>
+            <button class="chip" data-add="Reverse characters">reverse</button>
+            <button class="chip" data-add="Caesar shift +1">caesar+1</button>
+          </div>
+        </div>
+
+        <div class="pane pane-stack">
+          <div class="pane-head">
+            <span class="pane-n">b</span> pipeline
+            <button id="clear" class="clear">clear</button>
+          </div>
           <div class="search-wrap">
-            <input id="stage-search" type="text" placeholder="Search 4,658 stages - e.g. slug, base64, caesar..." autocomplete="off" />
+            <input id="stage-search" type="text" placeholder="search the registry&hellip;" autocomplete="off" />
             <ul id="suggestions" class="suggestions" hidden></ul>
           </div>
-
-          <div class="quick">
-            <span>Quick add:</span>
-            <button class="chip" data-add="Uppercase">Uppercase</button>
-            <button class="chip" data-add='Slug with "-"'>Slug</button>
-            <button class="chip" data-add="Base64 encode">Base64</button>
-            <button class="chip" data-add="Reverse characters">Reverse</button>
-            <button class="chip" data-add="Caesar shift +1">Caesar</button>
-          </div>
-        </div>
-
-        <div class="demo-col">
-          <div class="pipeline-head">
-            <label class="field-label">Pipeline</label>
-            <button id="clear" class="link-btn">clear</button>
-          </div>
           <ol id="pipeline" class="pipeline"></ol>
-          <p id="pipeline-empty" class="empty-hint">No stages yet - search above or use a quick&#8209;add chip.</p>
+          <p id="pipeline-empty" class="empty-hint">&mdash; no stages yet</p>
         </div>
 
-        <div class="demo-col output-col">
-          <label class="field-label">Output</label>
+        <div class="pane pane-out">
+          <div class="pane-head"><span class="pane-n">c</span> output</div>
           <pre id="output" class="output"></pre>
-          <div class="output-actions">
-            <button class="copy" data-copy-target="output">Copy output</button>
+          <div class="out-foot">
+            <button class="copy" data-copy-target="output">copy</button>
             <span id="output-status" class="status"></span>
           </div>
         </div>
       </div>
 
-      <details class="as-code">
-        <summary>Equivalent code</summary>
+      <details class="eq">
+        <summary><span class="label-inline">[ eq ]</span> equivalent code</summary>
         <pre id="code-out" class="code"></pre>
       </details>
     </section>
 
-    <section id="stages" class="section">
-      <div class="section-head">
-        <h2>What's inside</h2>
-        <p><span id="stage-count">4,658</span> stages across <span id="cat-count">16</span> families. Every name and behaviour is unique - enforced by the test suite.</p>
+    <!-- ================= REGISTRY ================= -->
+    <section id="registry" class="block">
+      <div class="block-head">
+        <p class="label">[ 02 ] &nbsp;registry</p>
+        <h2>What's in the box</h2>
       </div>
-      <div id="categories" class="categories"></div>
+
+      <div class="stats">
+        <div class="stat"><span class="stat-n" id="stage-count">4,658</span><span class="stat-l">unique stages</span></div>
+        <div class="stat"><span class="stat-n">100%</span><span class="stat-l">pure &amp; frozen</span></div>
+        <div class="stat"><span class="stat-n">0</span><span class="stat-l">dependencies</span></div>
+        <div class="stat"><span class="stat-n" id="cat-count">16</span><span class="stat-l">families</span></div>
+      </div>
+
+      <div id="categories" class="bars"></div>
     </section>
 
-    <section id="usage" class="section">
-      <div class="section-head"><h2>Use it from code</h2></div>
-      <div class="grid-2">
-        <div class="card">
-          <h3>Compose a pipeline</h3>
+    <!-- ================= API / CLI ================= -->
+    <section id="api" class="block">
+      <div class="block-head">
+        <p class="label">[ 03 ] &nbsp;interface</p>
+        <h2>From code, or from the shell</h2>
+      </div>
+
+      <div class="duo">
+        <div class="code-pane">
+          <div class="code-head">node</div>
           <pre class="code"><code>const { registry, createPipeline } = require('stagekit-js');
 
 const pipe = createPipeline([
@@ -124,48 +160,38 @@ const pipe = createPipeline([
   registry.findByName('Slug with "-"')[0],
 ]);
 
-pipe('  Hello   World  ');
-// -&gt; 'hello-world'</code></pre>
-        </div>
-        <div class="card">
-          <h3>Search the registry</h3>
-          <pre class="code"><code>registry.size;            // 4658
-registry.search('caesar'); // every caesar stage
-registry.get('mod-0002'); // one exact stage
+pipe('  Hello   World  ');   // 'hello-world'
 
-registry.search('slug')[0].run('My Post');
-// -&gt; 'my-post'</code></pre>
+registry.search('caesar');  // 25 stages
+registry.get('mod-0002');   // one exact stage</code></pre>
         </div>
-      </div>
-    </section>
-
-    <section id="cli" class="section">
-      <div class="section-head">
-        <h2>Or from the terminal</h2>
-        <p>Installing the package also installs the <code>stagekit</code> command.</p>
-      </div>
-      <pre class="code cli"><code><span class="c-dim">$</span> echo "My Article Title" | stagekit run <span class="c-s">'Slug with "-"'</span> <span class="c-s">'Base64 encode'</span>
+        <div class="code-pane">
+          <div class="code-head">shell</div>
+          <pre class="code"><code><span class="c-p">$</span> echo "My Article Title" | stagekit run \
+      'Slug with "-"' 'Base64 encode'
 bXktYXJ0aWNsZS10aXRsZQ==
 
-<span class="c-dim">$</span> stagekit search caesar
+<span class="c-p">$</span> stagekit search caesar
 25 match(es)
 
-<span class="c-dim">$</span> stagekit show mod-0002
+<span class="c-p">$</span> stagekit show mod-0002
 id          mod-0002
-name        Caesar shift +1
-description Shifts latin letters forward by 1.</code></pre>
+name        Caesar shift +1</code></pre>
+        </div>
+      </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="footer-inner">
-      <p><strong>stagekit-js</strong> &middot; MIT &middot; built by <a href="https://github.com/HussainAlkhatib" target="_blank" rel="noopener">Hussain Alkhatib</a></p>
-      <p class="footer-links">
-        <a href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">Source</a>
-        <a href="https://github.com/HussainAlkhatib/stagekit-js/blob/main/docs/GETTING-STARTED.md" target="_blank" rel="noopener">Docs</a>
-        <a href="https://github.com/HussainAlkhatib/stagekit-js/blob/main/docs/CATALOG.md" target="_blank" rel="noopener">Catalog</a>
-      </p>
-    </div>
+  <footer class="foot">
+    <span>stagekit-js</span>
+    <span class="foot-sep">/</span>
+    <span>MIT</span>
+    <span class="foot-sep">/</span>
+    <a href="https://github.com/HussainAlkhatib" target="_blank" rel="noopener">hussain alkhatib</a>
+    <span class="foot-right">
+      <a href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">source</a>
+      <a href="https://github.com/HussainAlkhatib/stagekit-js/blob/main/docs/CATALOG.md" target="_blank" rel="noopener">catalog</a>
+    </span>
   </footer>
 
   <script src="./assets/stages.js"></script>
