@@ -10,6 +10,14 @@ and run from code or from the command line.
 
 ## Install
 
+Install globally to get the `stagekit` command on your PATH:
+
+```bash
+npm install -g stagekit-js
+```
+
+Or install locally if you only want to use the library from code:
+
 ```bash
 npm install stagekit-js
 ```

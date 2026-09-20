@@ -6,13 +6,14 @@ other Unix tools.
 
 ## Install / invoke
 
-Once the package is installed, the `stagekit` binary is on your PATH:
+Install globally so the `stagekit` binary lands on your PATH:
 
 ```bash
+npm install -g stagekit-js
 stagekit --help
 ```
 
-Inside this repository you can run it directly:
+Inside this repository you can run it directly without installing:
 
 ```bash
 node bin/stagekit.js --help
