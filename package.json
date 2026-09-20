@@ -1,0 +1,51 @@
+{
+  "name": "stagekit-js",
+  "version": "1.0.0",
+  "description": "A catalog of composable, pure string-transformation stages with a pipeline API and CLI.",
+  "main": "src/index.js",
+  "exports": {
+    ".": "./src/index.js",
+    "./core": "./src/core/registry.js"
+  },
+  "bin": {
+    "stagekit": "bin/stagekit.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "generate": "node scripts/generate.js",
+    "test": "node test/run.js",
+    "lint": "node scripts/lint.js",
+    "count": "node scripts/count.js",
+    "cli": "node bin/stagekit.js",
+    "prepublishOnly": "npm run lint && npm test"
+  },
+  "keywords": [
+    "pipeline",
+    "transform",
+    "stages",
+    "string",
+    "text",
+    "cli",
+    "slug",
+    "encode"
+  ],
+  "author": "Hussain Alkhatib",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HussainAlkhatib/stagekit-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/HussainAlkhatib/stagekit-js/issues"
+  },
+  "homepage": "https://github.com/HussainAlkhatib/stagekit-js#readme",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  }
+}

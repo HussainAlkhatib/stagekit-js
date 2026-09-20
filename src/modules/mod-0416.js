@@ -1,0 +1,10 @@
+'use strict';
+
+const { defineStage } = require('../core/registry');
+
+module.exports = defineStage({
+  id: "mod-0416",
+  name: "Pad end to 10 with \"+\"",
+  description: "Right-pads the value to width 10 with \"+\".",
+  run: (value) => String(value).padEnd(10, "+"),
+});

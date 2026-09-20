@@ -1,0 +1,10 @@
+'use strict';
+
+const { defineStage } = require('../core/registry');
+
+module.exports = defineStage({
+  id: "mod-0865",
+  name: "Pad start to 28 with \"_\"",
+  description: "Left-pads the value to width 28 with \"_\".",
+  run: (value) => String(value).padStart(28, "_"),
+});
