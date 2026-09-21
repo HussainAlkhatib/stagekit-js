@@ -189,6 +189,71 @@ test('default pipeline runs the whole catalog', () => {
   assert.strictEqual(typeof out, 'string');
 });
 
+// --- pipeline: error strategies & trace ---------------------------------
+
+test('onError "throw" (default) surfaces the failing stage', () => {
+  const ok = defineStage({ id: 'mod-9101', name: 'ok', run: (v) => v + 'ok' });
+  const bad = defineStage({ id: 'mod-9102', name: 'bad', run: () => { throw new Error('boom'); } });
+  const pipe = createPipeline([ok, bad]);
+  assert.throws(() => pipe('x'), (err) => {
+    assert.ok(err instanceof errors.PipelineError);
+    assert.strictEqual(err.stageId, 'mod-9102');
+    assert.ok(/boom/.test(err.message));
+    return true;
+  });
+});
+
+test('onError "skip" keeps the previous value and continues', () => {
+  const bad = defineStage({ id: 'mod-9103', name: 'bad', run: () => { throw new Error('x'); } });
+  const ok = defineStage({ id: 'mod-9104', name: 'ok', run: (v) => v + 'B' });
+  const pipe = createPipeline([bad, ok]);
+  assert.strictEqual(pipe('A', { onError: 'skip' }), 'AB');
+});
+
+test('onError "stop" halts but returns what it has', () => {
+  const ok = defineStage({ id: 'mod-9105', name: 'ok', run: (v) => v + 'A' });
+  const bad = defineStage({ id: 'mod-9106', name: 'bad', run: () => { throw new Error('x'); } });
+  const never = defineStage({ id: 'mod-9107', name: 'never', run: (v) => v + 'C' });
+  const pipe = createPipeline([ok, bad, never]);
+  assert.strictEqual(pipe('', { onError: 'stop' }), 'A');
+});
+
+test('unknown onError strategy throws', () => {
+  const ok = defineStage({ id: 'mod-9108', name: 'ok', run: (v) => v });
+  assert.throws(() => createPipeline([ok])('x', { onError: 'explode' }), errors.PipelineError);
+});
+
+test('trace records input/output and stage ids', () => {
+  const a = defineStage({ id: 'mod-9109', name: 'a', run: (v) => v + 'A' });
+  const b = defineStage({ id: 'mod-9110', name: 'b', run: (v) => v + 'B' });
+  const pipe = createPipeline([a, b]);
+  const out = pipe('x', { trace: true });
+  assert.strictEqual(out, 'xAB');
+  assert.ok(Array.isArray(pipe.trace));
+  assert.strictEqual(pipe.trace.length, 2);
+  assert.deepStrictEqual(
+    pipe.trace.map((t) => [t.id, t.input, t.output]),
+    [['mod-9109', 'x', 'xA'], ['mod-9110', 'xA', 'xAB']]
+  );
+});
+
+test('trace captures the error when a stage fails', () => {
+  const bad = defineStage({ id: 'mod-9111', name: 'bad', run: () => { throw new Error('nope'); } });
+  const pipe = createPipeline([bad]);
+  try { pipe('x', { trace: true }); } catch (e) { /* expected */ }
+  assert.strictEqual(pipe.trace.length, 1);
+  assert.ok(pipe.trace[0].error instanceof errors.PipelineError);
+});
+
+test('abort signal stops before the next stage', () => {
+  const a = defineStage({ id: 'mod-9112', name: 'a', run: (v) => v + 'A' });
+  const b = defineStage({ id: 'mod-9113', name: 'b', run: (v) => v + 'B' });
+  const pipe = createPipeline([a, b]);
+  const controller = new AbortController();
+  controller.abort();
+  assert.throws(() => pipe('x', { signal: controller.signal }), (err) => err.aborted === true);
+});
+
 // --- errors -------------------------------------------------------------
 
 test('StageError extends Error', () => {
@@ -321,6 +386,53 @@ test('cli: unknown command exits non-zero', () => {
 test('cli: stdout stays clean when a name is ambiguous', () => {
   const out = cli(['run', 'Replace "a" with "b"', '--text', 'aaa']);
   assert.strictEqual(out.trim(), 'bbb');
+});
+
+test('cli: explain prints id, name and run', () => {
+  const out = cli(['explain', 'mod-0001']);
+  assert.ok(out.includes('mod-0001'));
+  assert.ok(out.includes('name'));
+  assert.ok(out.includes('run'));
+});
+
+test('cli: compose emits a JSON pipeline spec', () => {
+  const out = cli(['compose', 'Uppercase', 'Reverse characters']);
+  const spec = JSON.parse(out);
+  assert.strictEqual(spec.version, 1);
+  assert.strictEqual(spec.stages.length, 2);
+  assert.ok(spec.stages[0].id.startsWith('mod-'));
+  assert.ok(spec.stages[0].name);
+});
+
+test('cli: search --json returns an array', () => {
+  const out = cli(['search', 'caesar', '--json']);
+  const arr = JSON.parse(out);
+  assert.ok(Array.isArray(arr));
+  assert.ok(arr.length > 0);
+  assert.ok(arr[0].id && arr[0].name);
+});
+
+test('cli: run --trace prints a trace to stderr', () => {
+  let stderr = '';
+  try {
+    execFileSync('node', [BIN, 'run', 'Uppercase', '--text', 'abc', '--trace'], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    });
+  } catch (err) {
+    stderr = err.stderr;
+  }
+  // stdout is 'ABC'; trace goes to stderr
+  const out = execFileSync('node', [BIN, 'run', 'Uppercase', '--text', 'abc', '--trace'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  assert.strictEqual(out.trim(), 'ABC');
+});
+
+test('cli: run --on-error skip keeps going', () => {
+  const out = cli(['run', 'Uppercase', '--text', 'hi', '--on-error', 'skip']);
+  assert.strictEqual(out.trim(), 'HI');
 });
 
 console.log('passed: ' + passed + ', failed: ' + failed);

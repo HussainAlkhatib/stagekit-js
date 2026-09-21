@@ -84,6 +84,14 @@ Builds a runnable pipeline from an ordered array of stages.
 **Returns** `(value, options = {}) => value`.
 
 - `options.limit` - stop after this many stages.
+- `options.onError` - `'throw'` (default), `'skip'`, or `'stop'`:
+  - `throw` - abort the pipeline and raise a `PipelineError`.
+  - `skip` - keep the previous value and continue with the next stage.
+  - `stop` - stop the pipeline, returning the value produced so far.
+- `options.trace` - when `true`, each stage's `{ id, name, input, output,
+  ms }` (or `error`) is recorded on `pipe.trace` after the run.
+- `options.signal` - an `AbortSignal`; if aborted between stages the run stops
+  with a `PipelineError` whose `.aborted` is `true`.
 - The whole `options` object is forwarded to every `run` call, so stages can
   read their own keys.
 
@@ -93,6 +101,18 @@ const { registry, createPipeline } = require('stagekit-js');
 const pipe = createPipeline(registry.search('base64'));
 pipe('hi');              // runs every base64 stage
 pipe('hi', { limit: 1 }); // runs only the first
+
+// Resilience: keep going past a failing stage.
+const safe = createPipeline([
+  registry.findByName('Uppercase')[0],
+  { id: 'mod-9999', name: 'boom', run() { throw new Error('nope'); } },
+]);
+safe('hi', { onError: 'skip' }); // 'HI'
+
+// Observability: see what each stage did.
+pipe('hi', { trace: true });
+console.log(pipe.trace);
+// [ { id, name, input, output, ms }, ... ]
 ```
 
 ---

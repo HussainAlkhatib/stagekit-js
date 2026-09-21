@@ -32,13 +32,16 @@ stagekit list --limit 5
 # 5 of 4658 stages
 ```
 
-### `stagekit search <query>`
+### `stagekit search <query> [--json]`
 
 Substring search over id, name and description.
 
 ```bash
 stagekit search caesar
 stagekit search base64
+
+# machine-readable
+stagekit search caesar --json | jq '.[0].name'
 ```
 
 ### `stagekit show <id>`
@@ -47,6 +50,32 @@ Full details for one stage, including its source.
 
 ```bash
 stagekit show mod-0039
+```
+
+### `stagekit explain <id|name>`
+
+Like `show`, but accepts a name fragment too and is meant for humans
+exploring the catalog.
+
+```bash
+stagekit explain caesar
+stagekit explain 'slug' --pick 2
+```
+
+### `stagekit compose <stages...>`
+
+Resolve stages and emit a portable JSON pipeline spec. A good building
+block for tooling (and for saving a pipeline you like).
+
+```bash
+stagekit compose Uppercase 'Slug with "-"'
+# {
+#   "version": 1,
+#   "stages": [
+#     { "id": "mod-0014", "name": "Uppercase" },
+#     { "id": "mod-0012", "name": "Slug with \"-\"" }
+#   ]
+# }
 ```
 
 ### `stagekit count`
@@ -68,6 +97,9 @@ Run one or more stages, in order, over some input.
   `stdin`.
 - `--limit` / `-n` stops after N stages.
 - `--pick` / `-p` chooses which match to use when a fragment is ambiguous.
+- `--on-error throw|skip|stop` controls what happens when a stage throws
+  (default `throw`).
+- `--trace` prints a per-stage trace to **stderr**; stdout stays clean.
 
 ```bash
 # inline input
@@ -78,6 +110,12 @@ echo "My Article Title" | stagekit run slug base64
 
 # stop early
 stagekit run normalize slug --limit 1 --text "a   b"
+
+# keep going past a failing stage
+stagekit run slug --on-error skip --text "Hello World"
+
+# see what each stage did (trace goes to stderr)
+stagekit run Uppercase 'Reverse characters' --trace --text abc
 ```
 
 ### Resolving ambiguous names

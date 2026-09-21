@@ -10,10 +10,13 @@ const USAGE = [
   '',
   'Usage:',
   '  stagekit list [--limit N]',
-  '  stagekit search <query>',
+  '  stagekit search <query> [--json]',
   '  stagekit show <id>',
+  '  stagekit explain <id|name>',
+  '  stagekit compose <stages...>',
   '  stagekit count',
   '  stagekit run [stages...] [--text <string>] [--limit N] [--pick N]',
+  '              [--on-error throw|skip|stop] [--trace]',
   '',
   'A stage may be given as an id (mod-0042) or a name fragment (slug).',
   'When a fragment is ambiguous the first match is used and a warning is',
@@ -23,8 +26,10 @@ const USAGE = [
   'Examples:',
   '  echo "Hello World" | stagekit run slug',
   '  stagekit run mod-0055 mod-0015 --text "  Hello   World  "',
-  '  stagekit search caesar',
-  '  stagekit show mod-0039',
+  '  stagekit run slug --trace --text "Hello World"',
+  '  stagekit explain caesar',
+  '  stagekit compose trim lowercase slug > pipeline.json',
+  '  stagekit search caesar --json',
 ].join('\n');
 
 function fail(message) {
@@ -33,7 +38,7 @@ function fail(message) {
 }
 
 function parseFlags(argv) {
-  const flags = { text: null, limit: null, pick: null };
+  const flags = { text: null, limit: null, pick: null, json: false, trace: false, onError: null };
   const positional = [];
 
   for (let i = 0; i < argv.length; i += 1) {
@@ -53,6 +58,15 @@ function parseFlags(argv) {
       i += 1;
     } else if (arg.startsWith('--pick=')) {
       flags.pick = Number(arg.slice('--pick='.length));
+    } else if (arg === '--json') {
+      flags.json = true;
+    } else if (arg === '--trace') {
+      flags.trace = true;
+    } else if (arg === '--on-error') {
+      flags.onError = argv[i + 1];
+      i += 1;
+    } else if (arg.startsWith('--on-error=')) {
+      flags.onError = arg.slice('--on-error='.length);
     } else {
       positional.push(arg);
     }
@@ -122,11 +136,18 @@ function cmdList(flags) {
   process.stdout.write('\n' + shown.length + ' of ' + all.length + ' stages\n');
 }
 
-function cmdSearch(query) {
+function cmdSearch(query, flags) {
   if (!query) {
     fail('search needs a query');
   }
   const hits = registry.search(query);
+
+  if (flags && flags.json) {
+    const payload = hits.map((s) => ({ id: s.id, name: s.name, description: s.description }));
+    process.stdout.write(JSON.stringify(payload, null, 2) + '\n');
+    return;
+  }
+
   if (hits.length === 0) {
     process.stdout.write('no matches for "' + query + '"\n');
     return;
@@ -135,6 +156,29 @@ function cmdSearch(query) {
     process.stdout.write(pad(stage.id, 10) + pad(stage.name, 28) + stage.description + '\n');
   }
   process.stdout.write('\n' + hits.length + ' match(es)\n');
+}
+
+function cmdExplain(token, pick) {
+  if (!token) {
+    fail('explain needs an id or name');
+  }
+  const stage = resolveStage(token, pick);
+  process.stdout.write('id          ' + stage.id + '\n');
+  process.stdout.write('name        ' + stage.name + '\n');
+  process.stdout.write('description ' + stage.description + '\n');
+  process.stdout.write('\nrun\n' + stage.run.toString() + '\n');
+}
+
+function cmdCompose(positional, flags) {
+  if (positional.length === 0) {
+    fail('compose needs at least one stage');
+  }
+  const stages = positional.map((token) => resolveStage(token, flags.pick));
+  const spec = {
+    version: 1,
+    stages: stages.map((s) => ({ id: s.id, name: s.name })),
+  };
+  process.stdout.write(JSON.stringify(spec, null, 2) + '\n');
 }
 
 function cmdShow(id) {
@@ -172,8 +216,27 @@ async function cmdRun(positional, flags) {
   if (flags.limit != null) {
     options.limit = flags.limit;
   }
+  if (flags.onError != null) {
+    options.onError = flags.onError;
+  }
+  if (flags.trace) {
+    options.trace = true;
+  }
 
-  process.stdout.write(pipe(input, options) + '\n');
+  const result = pipe(input, options);
+  process.stdout.write(result + '\n');
+
+  if (flags.trace && pipe.trace) {
+    process.stderr.write('\ntrace:\n');
+    for (const step of pipe.trace) {
+      const label = step.id + '  ' + step.name;
+      if (step.error) {
+        process.stderr.write('  ' + pad(label, 40) + 'ERROR: ' + step.error.message + '\n');
+      } else {
+        process.stderr.write('  ' + pad(label, 40) + JSON.stringify(step.output) + '  (' + step.ms + 'ms)\n');
+      }
+    }
+  }
 }
 
 async function main() {
@@ -196,10 +259,16 @@ async function main() {
       cmdList(flags);
       break;
     case 'search':
-      cmdSearch(positional[0]);
+      cmdSearch(positional[0], flags);
       break;
     case 'show':
       cmdShow(positional[0]);
+      break;
+    case 'explain':
+      cmdExplain(positional[0], flags.pick);
+      break;
+    case 'compose':
+      cmdCompose(positional, flags);
       break;
     case 'count':
       cmdCount();

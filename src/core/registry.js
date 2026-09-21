@@ -1,6 +1,6 @@
 'use strict';
 
-const { StageError } = require('./errors');
+const { StageError, PipelineError } = require('./errors');
 
 const ID_PATTERN = /^mod-[0-9]{4}$/;
 
@@ -80,17 +80,75 @@ function createRegistry(stages) {
 function createPipeline(stages) {
   const ordered = Array.isArray(stages) ? stages.slice() : [];
 
-  return function runPipeline(value, options = {}) {
+  // Backwards-compatible runner. The default call signature and behaviour
+  // (run every stage in order, honour `limit`) are unchanged. Extra options
+  // are opt-in:
+  //
+  //   options.limit   number  - stop after N stages (unchanged)
+  //   options.onError string  - 'throw' (default) | 'skip' | 'stop'
+  //                             | 'collect'
+  //   options.trace   boolean - also record each step (see below)
+  //   options.signal  AbortSignal - abort between stages
+  //
+  // A trace (returned only when `options.trace` is true) is an array of
+  // { id, name, input, output, ms, error? }. It is also exposed on the
+  // pipeline object as `.run.trace` after each run for convenience.
+  function runPipeline(value, options = {}) {
     const limit = typeof options.limit === 'number' ? options.limit : ordered.length;
     const stop = Math.max(0, Math.min(limit, ordered.length));
+    const onError = options.onError || 'throw';
+    const trace = options.trace ? [] : null;
+    if (trace) runPipeline.trace = trace;
+
+    if (!['throw', 'skip', 'stop', 'collect'].includes(onError)) {
+      throw new PipelineError('unknown onError strategy: ' + onError);
+    }
+
     let current = value;
 
     for (let i = 0; i < stop; i += 1) {
-      current = ordered[i].run(current, options);
+      const stage = ordered[i];
+
+      if (options.signal && options.signal.aborted) {
+        const abortErr = new PipelineError('pipeline aborted before ' + stage.id);
+        abortErr.aborted = true;
+        if (trace) trace.push({ id: stage.id, name: stage.name, input: current, error: abortErr });
+        if (onError === 'throw' || onError === 'stop') throw abortErr;
+        break;
+      }
+
+      const started = options.trace ? Date.now() : 0;
+      try {
+        const output = stage.run(current, options);
+        if (trace) {
+          trace.push({ id: stage.id, name: stage.name, input: current, output, ms: Date.now() - started });
+        }
+        current = output;
+      } catch (err) {
+        const wrapped = err instanceof StageError ? err : new PipelineError(
+          'stage ' + stage.id + ' (' + stage.name + ') failed: ' + (err && err.message ? err.message : String(err))
+        );
+        wrapped.stageId = stage.id;
+        wrapped.cause = err;
+
+        if (trace) {
+          trace.push({ id: stage.id, name: stage.name, input: current, error: wrapped, ms: Date.now() - started });
+        }
+
+        if (onError === 'throw') throw wrapped;
+        if (onError === 'stop') break;
+        // 'skip' keeps the previous value and continues;
+        // 'collect' keeps the previous value and records the error.
+      }
     }
 
+    if (trace) runPipeline.trace = trace;
     return current;
-  };
+  }
+
+  runPipeline.stages = ordered.slice();
+
+  return runPipeline;
 }
 
 module.exports = { defineStage, createRegistry, createPipeline };

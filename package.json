@@ -21,6 +21,7 @@
     "generate": "node scripts/generate.js",
     "build:web": "node scripts/build-web.js",
     "serve:web": "node scripts/serve-web.js",
+    "bench": "node scripts/bench.js",
     "test": "node test/run.js",
     "lint": "node scripts/lint.js",
     "count": "node scripts/count.js",
