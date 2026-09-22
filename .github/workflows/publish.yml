@@ -18,12 +18,12 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
-          node-version: 20
+          node-version: 22
           registry-url: https://registry.npmjs.org
 
       - name: Verify tag matches package version
@@ -46,7 +46,32 @@ jobs:
       - name: Test
         run: npm test
 
+      - name: Check if version is already published
+        id: check
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          if npm view "$NAME@$VERSION" version >/dev/null 2>&1; then
+            echo "published=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::$NAME@$VERSION is already on npm; skipping publish."
+          else
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
       - name: Publish
+        id: publish
+        if: steps.check.outputs.published == 'false'
+        continue-on-error: true
         run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Report publish result
+        if: steps.check.outputs.published == 'false'
+        run: |
+          if [ "${{ steps.publish.outcome }}" != "success" ]; then
+            echo "::error::npm publish failed. If the registry reports a 24h republish ban (E403), wait for the ban to expire and re-run this workflow. No code change is required."
+            exit 1
+          fi

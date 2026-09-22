@@ -1,6 +1,6 @@
 {
   "name": "stagekit-js",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A catalog of composable, pure string-transformation stages with a pipeline API and CLI.",
   "main": "src/index.js",
   "exports": {
