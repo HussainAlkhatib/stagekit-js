@@ -12,6 +12,7 @@ const crypto = require('crypto');
 
 const WEB = path.join(__dirname, '..', 'web');
 const ASSETS = path.join(WEB, 'assets');
+const PKG_VERSION = require('../package.json').version;
 
 const stages = require('../src/modules');
 
@@ -121,9 +122,12 @@ const index = fs
   .readFileSync(indexPath, 'utf8')
   .replace(/assets\/styles\.css(\?v=[^"']*)?/g, 'assets/styles.css?v=' + version)
   .replace(/assets\/app\.js(\?v=[^"']*)?/g, 'assets/app.js?v=' + version)
-  .replace(/assets\/stages\.js(\?v=[^"']*)?/g, 'assets/stages.js?v=' + version);
+  .replace(/assets\/stages\.js(\?v=[^"']*)?/g, 'assets/stages.js?v=' + version)
+  // Keep the visible version badge in sync with package.json.
+  .replace(/(<span class="brand-tag">)v[^<]*(<\/span>)/, '$1v' + PKG_VERSION + '$2');
 fs.writeFileSync(indexPath, index, 'utf8');
 
 console.log('web bundle: ' + data.length + ' stages -> web/assets/stages.js');
 console.log('categories: ' + Object.keys(counts).length);
+console.log('package version: ' + PKG_VERSION);
 console.log('asset version: ' + version);
