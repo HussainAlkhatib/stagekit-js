@@ -53,6 +53,8 @@ registry.findByPrefix('mod-00');  // everything from mod-0000 to mod-0099
 `createPipeline` returns a function `(value, options) => result`.
 
 - `options.limit` stops after N stages.
+- `options.onError` chooses what to do when a stage throws: `'throw'`
+  (default), `'skip'`, `'stop'`, or `'collect'`.
 - `options` is forwarded to every stage, so stages can read their own
   configuration keys.
 

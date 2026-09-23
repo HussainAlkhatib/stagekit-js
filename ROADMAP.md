@@ -22,17 +22,14 @@ Legend: [x] done . [~] partial . [ ] planned
 ## 2. Pipeline runner (the core engine)
 
 - [x] Order-preserving pipeline with `limit` (unchanged, backward-compatible).
-- [x] Error strategies: `throw` (default), `skip`, `stop`.
+- [x] Error strategies: `throw` (default), `skip`, `stop`, `collect`.
 - [x] `trace` mode recording { id, name, input, output, ms, error? }.
 - [x] `AbortSignal` support for cooperative cancellation.
 - [x] Errors carry `stageId` and a `cause`.
-- [ ] `collect` strategy that aggregates all errors into a result object.
+- [x] `collect` strategy: keeps the previous value, continues, and
+  aggregates the wrapped errors on `pipe.errors`.
 - [ ] Optional async stages (a stage whose `run` returns a Promise).
 - [ ] Streaming runner for very large inputs (line-by-line).
-
-Note: `collect` is accepted by the option validator today but currently
-behaves like `skip` at the value level (previous value is kept and the error
-is recorded in the trace). A richer result object is planned.
 
 ## 3. Catalog: quality over raw count
 
@@ -56,7 +53,7 @@ stage is a tiny pure function) and the count is a feature for discovery.
 - [x] compose <stages...> - emit a portable JSON pipeline spec.
 - [x] search --json - machine-readable output.
 - [x] run --trace - per-stage trace on stderr; stdout stays clean.
-- [x] run --on-error throw|skip|stop.
+- [x] run --on-error throw|skip|stop|collect.
 - [ ] stagekit test <pipeline.json> - run a saved pipeline against fixtures.
 - [ ] stagekit bench <stages...> - time a pipeline from the CLI.
 - [ ] Shell completion (bash/zsh/fish).

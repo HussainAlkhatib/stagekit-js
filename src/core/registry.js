@@ -87,18 +87,24 @@ function createPipeline(stages) {
   //   options.limit   number  - stop after N stages (unchanged)
   //   options.onError string  - 'throw' (default) | 'skip' | 'stop'
   //                             | 'collect'
+  //
+  //   With onError: 'collect', failing stages keep the previous value and
+  //   every wrapped error is appended to an array exposed on the pipeline
+  //   object as `.errors` after each run.
   //   options.trace   boolean - also record each step (see below)
   //   options.signal  AbortSignal - abort between stages
   //
   // A trace (returned only when `options.trace` is true) is an array of
-  // { id, name, input, output, ms, error? }. It is also exposed on the
-  // pipeline object as `.run.trace` after each run for convenience.
+  // { id, name, input, output, ms, error? }. It is exposed on the pipeline
+  // object as `.trace` after each run for convenience.
   function runPipeline(value, options = {}) {
     const limit = typeof options.limit === 'number' ? options.limit : ordered.length;
     const stop = Math.max(0, Math.min(limit, ordered.length));
     const onError = options.onError || 'throw';
     const trace = options.trace ? [] : null;
-    if (trace) runPipeline.trace = trace;
+    const errors = onError === 'collect' ? [] : null;
+    runPipeline.trace = trace;
+    runPipeline.errors = errors;
 
     if (!['throw', 'skip', 'stop', 'collect'].includes(onError)) {
       throw new PipelineError('unknown onError strategy: ' + onError);
@@ -137,12 +143,14 @@ function createPipeline(stages) {
 
         if (onError === 'throw') throw wrapped;
         if (onError === 'stop') break;
-        // 'skip' keeps the previous value and continues;
-        // 'collect' keeps the previous value and records the error.
+        if (onError === 'collect') errors.push(wrapped);
+        // 'skip' and 'collect' keep the previous value and continue;
+        // 'collect' additionally aggregates the errors on `pipe.errors`.
       }
     }
 
-    if (trace) runPipeline.trace = trace;
+    runPipeline.trace = trace;
+    runPipeline.errors = errors;
     return current;
   }
 

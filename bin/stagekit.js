@@ -16,7 +16,7 @@ const USAGE = [
   '  stagekit compose <stages...>',
   '  stagekit count',
   '  stagekit run [stages...] [--text <string>] [--limit N] [--pick N]',
-  '              [--on-error throw|skip|stop] [--trace]',
+  '              [--on-error throw|skip|stop|collect] [--trace]',
   '',
   'A stage may be given as an id (mod-0042) or a name fragment (slug).',
   'When a fragment is ambiguous the first match is used and a warning is',
@@ -225,6 +225,13 @@ async function cmdRun(positional, flags) {
 
   const result = pipe(input, options);
   process.stdout.write(result + '\n');
+
+  if (options.onError === 'collect' && pipe.errors && pipe.errors.length > 0) {
+    process.stderr.write('\n' + pipe.errors.length + ' error(s) collected:\n');
+    for (const err of pipe.errors) {
+      process.stderr.write('  ' + (err.stageId || '?') + ': ' + err.message + '\n');
+    }
+  }
 
   if (flags.trace && pipe.trace) {
     process.stderr.write('\ntrace:\n');

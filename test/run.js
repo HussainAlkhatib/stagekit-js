@@ -218,6 +218,24 @@ test('onError "stop" halts but returns what it has', () => {
   assert.strictEqual(pipe('', { onError: 'stop' }), 'A');
 });
 
+test('onError "collect" keeps going and aggregates errors', () => {
+  const bad = defineStage({ id: 'mod-9114', name: 'bad', run: () => { throw new Error('x'); } });
+  const ok = defineStage({ id: 'mod-9115', name: 'ok', run: (v) => v + 'B' });
+  const pipe = createPipeline([bad, ok]);
+  assert.strictEqual(pipe('A', { onError: 'collect' }), 'AB');
+  assert.ok(Array.isArray(pipe.errors));
+  assert.strictEqual(pipe.errors.length, 1);
+  assert.ok(pipe.errors[0] instanceof errors.PipelineError);
+  assert.strictEqual(pipe.errors[0].stageId, 'mod-9114');
+});
+
+test('collect leaves .errors empty when nothing fails', () => {
+  const ok = defineStage({ id: 'mod-9116', name: 'ok', run: (v) => v + 'A' });
+  const pipe = createPipeline([ok]);
+  assert.strictEqual(pipe('x', { onError: 'collect' }), 'xA');
+  assert.deepStrictEqual(pipe.errors, []);
+});
+
 test('unknown onError strategy throws', () => {
   const ok = defineStage({ id: 'mod-9108', name: 'ok', run: (v) => v });
   assert.throws(() => createPipeline([ok])('x', { onError: 'explode' }), errors.PipelineError);
@@ -230,6 +248,7 @@ test('trace records input/output and stage ids', () => {
   const out = pipe('x', { trace: true });
   assert.strictEqual(out, 'xAB');
   assert.ok(Array.isArray(pipe.trace));
+  assert.strictEqual(pipe.errors, null);
   assert.strictEqual(pipe.trace.length, 2);
   assert.deepStrictEqual(
     pipe.trace.map((t) => [t.id, t.input, t.output]),
@@ -433,6 +452,14 @@ test('cli: run --trace prints a trace to stderr', () => {
 test('cli: run --on-error skip keeps going', () => {
   const out = cli(['run', 'Uppercase', '--text', 'hi', '--on-error', 'skip']);
   assert.strictEqual(out.trim(), 'HI');
+});
+
+test('cli: run --on-error collect reports errors on stderr', () => {
+  const res = execFileSync('node', [BIN, 'run', 'Uppercase', '--text', 'hi', '--on-error', 'collect'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  assert.strictEqual(res.trim(), 'HI');
 });
 
 console.log('passed: ' + passed + ', failed: ' + failed);

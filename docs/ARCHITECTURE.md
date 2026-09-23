@@ -61,8 +61,9 @@ It exists so the registry can be built in one shot. Regenerate it with
 - `createPipeline(stages)` turns an ordered list into a runnable function.
 
 `src/core/errors.js` defines `StageError` (anything that goes wrong while
-defining or looking up a stage) and `PipelineError` (reserved for future
-runtime failures).
+defining or looking up a stage) and `PipelineError` (a runtime failure while
+running a pipeline, such as a stage that throws or an aborted signal).
+`PipelineError` extends `StageError`.
 
 ### 4. The public API
 
@@ -73,9 +74,12 @@ from `src/core` directly.
 ## Why ids are numeric
 
 Stages carry two labels: a unique `id` (`mod-0042`) and a human `name`
-(`Caesar +1`). Names are not unique - several stages can share one - so they
-cannot be used as a key. Ids are guaranteed unique by the registry, which
-rejects duplicates at construction time.
+(`Caesar shift +1`). In this catalog **both are unique**: the lint step and
+the test suite reject duplicate ids *and* duplicate names. That said, only
+the `id` is a stable key. Ids are assigned once and never reused, so they are
+safe to store in configs and scripts. A `name` may be reworded between
+releases, so treat it as a label rather than a key. The registry itself only
+enforces id uniqueness; name uniqueness is a catalog invariant.
 
 Because ids are assigned sequentially and never reused, `nextId()` is simply
 `size + 1`, and `findByPrefix('mod-00')` gives you a stable, contiguous
@@ -95,6 +99,6 @@ only coupling.
 
 1. Every registered id matches `/^mod-[0-9]{4}$/`.
 2. Ids are unique within a registry.
-3. `run` is always a function and always returns a value.
+3. `run` is always a function and always returns a **string**.
 4. Stage objects are frozen.
 5. The barrel and the catalog docs are generated, never hand-written.

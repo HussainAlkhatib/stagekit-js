@@ -91,14 +91,14 @@ stagekit count   # 4658
 Run one or more stages, in order, over some input.
 
 - Each `stage` is either an exact id (`mod-0015`) or a name fragment
-  (`slug`). Fragments must resolve to exactly one stage, otherwise the CLI
-  lists the candidates and exits.
+  (`slug`). If a fragment matches several stages the CLI uses the first,
+  prints the candidates to `stderr`, and continues (see below).
 - `--text` / `-t` supplies the input inline. Without it, input is read from
   `stdin`.
 - `--limit` / `-n` stops after N stages.
 - `--pick` / `-p` chooses which match to use when a fragment is ambiguous.
-- `--on-error throw|skip|stop` controls what happens when a stage throws
-  (default `throw`).
+- `--on-error throw|skip|stop|collect` controls what happens when a stage
+  throws (default `throw`).
 - `--trace` prints a per-stage trace to **stderr**; stdout stays clean.
 
 ```bash
@@ -114,14 +114,17 @@ stagekit run normalize slug --limit 1 --text "a   b"
 # keep going past a failing stage
 stagekit run slug --on-error skip --text "Hello World"
 
+# collect failures (reported on stderr) and still print a result
+stagekit run Uppercase --on-error collect --text "Hello World"
+
 # see what each stage did (trace goes to stderr)
 stagekit run Uppercase 'Reverse characters' --trace --text abc
 ```
 
 ### Resolving ambiguous names
 
-Names are not unique. If a fragment matches several stages, the CLI uses
-the first, warns on `stderr`, and tells you the candidates:
+If a fragment matches several stages, the CLI uses the first, warns on
+`stderr`, and tells you the candidates:
 
 ```bash
 $ stagekit run slug --text "My Article"
@@ -148,7 +151,7 @@ curl -s https://example.com/titles | stagekit run slug base64
 
 | code | meaning |
 | --- | --- |
-| 0 | success |
-| 1 | bad usage, unknown stage, or ambiguous stage name |
+| 0 | success (including an ambiguous name, which only warns) |
+| 1 | bad usage or an unknown stage |
 
 Diagnostics go to `stderr`; only results go to `stdout`, so pipes stay clean.

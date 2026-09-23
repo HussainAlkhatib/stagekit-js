@@ -25,7 +25,7 @@ Validates a stage and returns it frozen.
 | name | type | required | description |
 | --- | --- | --- | --- |
 | `id` | `string` | yes | Must match `/^mod-[0-9]{4}$/`. |
-| `name` | `string` | yes | Non-empty, human readable. Not unique. |
+| `name` | `string` | yes | Non-empty, human readable. Unique in this catalog. |
 | `description` | `string` | no | Defaults to `''`. |
 | `run` | `function` | yes | `(value, options) => value`. |
 
@@ -84,10 +84,12 @@ Builds a runnable pipeline from an ordered array of stages.
 **Returns** `(value, options = {}) => value`.
 
 - `options.limit` - stop after this many stages.
-- `options.onError` - `'throw'` (default), `'skip'`, or `'stop'`:
+- `options.onError` - `'throw'` (default), `'skip'`, `'stop'`, or `'collect'`:
   - `throw` - abort the pipeline and raise a `PipelineError`.
   - `skip` - keep the previous value and continue with the next stage.
   - `stop` - stop the pipeline, returning the value produced so far.
+  - `collect` - keep the previous value and continue, appending each
+    wrapped error to `pipe.errors` (an array) after the run.
 - `options.trace` - when `true`, each stage's `{ id, name, input, output,
   ms }` (or `error`) is recorded on `pipe.trace` after the run.
 - `options.signal` - an `AbortSignal`; if aborted between stages the run stops
@@ -108,6 +110,14 @@ const safe = createPipeline([
   { id: 'mod-9999', name: 'boom', run() { throw new Error('nope'); } },
 ]);
 safe('hi', { onError: 'skip' }); // 'HI'
+
+// Collect failures instead of stopping or throwing.
+const collecting = createPipeline([
+  registry.findByName('Uppercase')[0],
+  { id: 'mod-9999', name: 'boom', run() { throw new Error('nope'); } },
+]);
+collecting('hi', { onError: 'collect' }); // 'HI'
+collecting.errors.length;                 // 1
 
 // Observability: see what each stage did.
 pipe('hi', { trace: true });
@@ -141,7 +151,7 @@ contents as `registry.list()`.
 | export | base | thrown when |
 | --- | --- | --- |
 | `StageError` | `Error` | Defining, registering or looking up a stage fails. |
-| `PipelineError` | `StageError` | Reserved for runtime pipeline failures. |
+| `PipelineError` | `StageError` | A stage threw, or the signal aborted mid-run. |
 
 ```js
 const { errors, registry } = require('stagekit-js');
