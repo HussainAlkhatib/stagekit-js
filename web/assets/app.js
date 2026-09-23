@@ -137,10 +137,10 @@
     try { localStorage.setItem(THEME_KEY, mode); } catch (e) { /* ignore */ }
   }
   (function initTheme() {
+    // Dark-first: the design is built for dark; light is opt-in via the toggle.
     var saved = null;
     try { saved = localStorage.getItem(THEME_KEY); } catch (e) { /* ignore */ }
-    if (saved === 'light' || saved === 'dark') { setTheme(saved); return; }
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) setTheme('light');
+    setTheme(saved === 'light' ? 'light' : 'dark');
   })();
   var themeBtn = $('#theme-toggle');
   if (themeBtn) {

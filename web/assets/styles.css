@@ -182,7 +182,9 @@ img,svg { display:block; max-width:100%; }
 /* ============================================================
    layout
    ============================================================ */
-main, .topbar, .foot, .marquee { position:relative; z-index:1; }
+main, .foot, .marquee { position:relative; z-index:1; }
+/* .topbar keeps position:sticky (set above); sticky already establishes a
+   stacking context, so it needs no position override here. */
 .wrap { max-width:var(--maxw); margin:0 auto; padding:0 clamp(14px,4vw,28px); }
 .section { padding:var(--sp-9) 0; scroll-margin-top:70px; }
 .section + .section { border-top:1px solid var(--line); }

@@ -8,6 +8,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const WEB = path.join(__dirname, '..', 'web');
 const ASSETS = path.join(WEB, 'assets');
@@ -105,5 +106,24 @@ fs.writeFileSync(
   'utf8'
 );
 
+// Cache-bust the local assets. GitHub Pages serves them with a 10-minute
+// cache, so a fresh deploy could pair new HTML with a stale stylesheet and
+// render an unstyled page. Stamping a content hash into the HTML forces the
+// browser to fetch the new files immediately.
+const hash = crypto.createHash('sha1');
+for (const f of ['styles.css', 'app.js', 'stages.js']) {
+  hash.update(fs.readFileSync(path.join(ASSETS, f)));
+}
+const version = hash.digest('hex').slice(0, 10);
+
+const indexPath = path.join(WEB, 'index.html');
+const index = fs
+  .readFileSync(indexPath, 'utf8')
+  .replace(/assets\/styles\.css(\?v=[^"']*)?/g, 'assets/styles.css?v=' + version)
+  .replace(/assets\/app\.js(\?v=[^"']*)?/g, 'assets/app.js?v=' + version)
+  .replace(/assets\/stages\.js(\?v=[^"']*)?/g, 'assets/stages.js?v=' + version);
+fs.writeFileSync(indexPath, index, 'utf8');
+
 console.log('web bundle: ' + data.length + ' stages -> web/assets/stages.js');
 console.log('categories: ' + Object.keys(counts).length);
+console.log('asset version: ' + version);

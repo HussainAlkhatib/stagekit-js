@@ -1,7 +1,14 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
+  <script>
+    // Apply a saved theme before first paint (no flash). Dark is the default.
+    try {
+      var t = localStorage.getItem('stagekit-theme');
+      if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    } catch (e) {}
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>stagekit / string transformation workbench</title>
   <meta name="description" content="4,658 pure, composable string-transformation stages. Stack them into a pipeline and run them from your code, your shell, or live in the browser." />
@@ -12,7 +19,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hussainalkhatib.github.io/stagekit-js/" />
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2304050a'/%3E%3Ctext x='7' y='23' font-family='monospace' font-size='19' font-weight='700' fill='%23ffb224'%3E%3E%3C/text%3E%3C/svg%3E" />
-  <link rel="stylesheet" href="./assets/styles.css" />
+  <link rel="stylesheet" href="./assets/styles.css?v=3f096d0981" />
 </head>
 <body>
   <a class="skip" href="#workbench">Skip to workbench</a>
@@ -221,7 +228,7 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script src="./assets/stages.js"></script>
-  <script src="./assets/app.js"></script>
+  <script src="./assets/stages.js?v=3f096d0981"></script>
+  <script src="./assets/app.js?v=3f096d0981"></script>
 </body>
 </html>
