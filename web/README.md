@@ -6,14 +6,43 @@ Static, dependency-free site for `stagekit-js`, deployed to GitHub Pages.
 
 ```
 web/
-  index.html            landing page + live demo
+  index.html            landing page + live demo + catalog + FAQ
   assets/
-    styles.css          styles
-    app.js              live-demo logic (search, pipeline, stats)
+    styles.css          design system + site styles (token layers)
+    app.js              live-demo logic (search, pipeline, catalog, palette)
     stages.js           GENERATED browser bundle of all stages
     meta.json           GENERATED counts per category
   .nojekyll             tell Pages not to run Jekyll
 ```
+
+## Features
+
+- **Live workbench** - every stage runs the real function in the browser.
+  Add stages by search, quick chips, the catalog, or the command palette.
+- **Per-step previews** - each pipeline row shows the value it produced, or
+  the error if it threw.
+- **Reorder & toggle** - drag a row to reorder, click the eye to disable a
+  stage without removing it.
+- **Equivalent code tabs** - node, shell, and a portable `pipeline.json` spec,
+  generated from the current pipeline.
+- **Catalog browser** - search and filter all stages by family, add with one
+  click, paginated (48 at a time) so the DOM stays light.
+- **Command palette** - `Ctrl`/`Cmd` + `K` to search and add stages from
+  anywhere.
+- **Theme toggle** - dark (OLED) by default, light on request; honours
+  `prefers-color-scheme` and persists to `localStorage`.
+- **Deep links** - the URL tracks the pipeline and input (`?p=mod-0012.mod-0014&in=hi`),
+  so any workbench state is shareable.
+- **Accessible** - keyboard-operable pipeline (arrow keys, Delete, Alt+Up/Down),
+  visible focus, ARIA roles, and full `prefers-reduced-motion` support.
+
+## Design system
+
+`assets/styles.css` uses three token layers - primitive, semantic, component -
+so the whole theme can be re-skinned by editing the semantic block. Dark is the
+primary theme; light is a first-class override via `:root[data-theme=light]`.
+Accent is amber, the "run" accent is green, type is JetBrains Mono + IBM Plex
+Sans.
 
 ## Regenerating the stage bundle
 

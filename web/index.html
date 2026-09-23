@@ -4,195 +4,222 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>stagekit / string transformation workbench</title>
-  <meta name="description" content="4,658 pure, composable string-transformation stages. Chain them into a pipeline, run them from code, the CLI, or live in the browser." />
-  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="4,658 pure, composable string-transformation stages. Stack them into a pipeline and run them from your code, your shell, or live in the browser." />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#04050a" />
   <meta property="og:title" content="stagekit / string transformation workbench" />
-  <meta property="og:description" content="4,658 pure, composable string-transformation stages." />
+  <meta property="og:description" content="4,658 pure, composable string-transformation stages for JavaScript and the command line." />
+  <meta property="og:type" content="website" />
   <meta property="og:url" content="https://hussainalkhatib.github.io/stagekit-js/" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230a0a0b'/%3E%3Ctext x='4' y='23' font-family='monospace' font-size='20' fill='%23ffb224'%3E%3E%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2304050a'/%3E%3Ctext x='7' y='23' font-family='monospace' font-size='19' font-weight='700' fill='%23ffb224'%3E%3E%3C/text%3E%3C/svg%3E" />
   <link rel="stylesheet" href="./assets/styles.css" />
 </head>
 <body>
+  <a class="skip" href="#workbench">Skip to workbench</a>
   <div class="draft" aria-hidden="true"></div>
 
-  <header class="bar">
-    <a class="mark" href="#top">
-      <span class="mark-glyph">&gt;</span> stagekit
-    </a>
-    <span class="bar-tag">v1.0.0</span>
-    <nav class="bar-nav">
+  <header class="topbar">
+    <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true">&gt;</span> stagekit</a>
+    <span class="brand-tag">v1.0.0</span>
+
+    <button class="search-trigger" id="palette-open" aria-haspopup="dialog" aria-keyshortcuts="Control+K Meta+K">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <span class="label">Search stages</span>
+      <span class="kbd" aria-hidden="true">Ctrl K</span>
+    </button>
+
+    <nav class="topnav" aria-label="Primary">
       <a href="#workbench">workbench</a>
+      <a href="#catalog">catalog</a>
       <a href="#registry">registry</a>
-      <a href="#api">api</a>
+      <a href="#faq">faq</a>
       <a class="ext" href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">source&nbsp;&#8599;</a>
     </nav>
+    <button class="icon-btn" id="theme-toggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z"/></svg>
+    </button>
   </header>
 
   <main id="top">
-    <!-- ================= OVERVIEW ================= -->
-    <section class="overview">
-      <div class="overview-copy">
-        <p class="label">[ 00 ] &nbsp;overview</p>
-        <h1>
-          <span class="line"><span id="hero-count">4,658</span> ways</span>
-          <span class="line">to bend</span>
-          <span class="line">a string.<span class="caret"></span></span>
+    <!-- ============== HERO ============== -->
+    <section class="wrap hero">
+      <div>
+        <p class="eyebrow">[ 00 ] overview</p>
+        <h1 class="hero-title">
+          <span class="l"><span class="hl" id="hero-count">4,658</span> ways</span>
+          <span class="l">to bend</span>
+          <span class="l">a string<span class="cursor" aria-hidden="true"></span></span>
         </h1>
-        <p class="dek">
-          A catalogue of small, pure transformations. Each one does a single
-          thing to a string. Snap them together into a pipeline and run the
-          whole chain from your code, your shell, or right here.
+        <p class="lede">
+          A catalog of <b>small, pure</b> transformations. Each stage does a single
+          thing to a string. Stack them into a pipeline and run the whole chain
+          from your code, your shell, or right here.
         </p>
-
         <div class="install-row">
-          <code class="install"><span class="prompt">$</span> npm i -g stagekit-js</code>
-          <button class="copy" data-copy="npm i -g stagekit-js">copy</button>
-          <a class="jump" href="#workbench">open workbench &#8595;</a>
+          <code class="install"><span class="prompt">$</span><span class="cmd">npm i -g stagekit-js</span></code>
+          <button class="btn btn-sm copy" data-copy="npm i -g stagekit-js">copy</button>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href="#workbench">
+            Open workbench
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+          </a>
+          <a class="btn" href="#catalog">Browse 4,658 stages</a>
         </div>
       </div>
 
       <aside class="readout" aria-hidden="true">
-        <div class="readout-bar">
-          <span class="dot"></span> live
-          <span class="readout-tag">auto&#8209;demo</span>
+        <div class="ro-head"><span class="ro-dot"></span> live <span class="tag">auto-demo</span></div>
+        <div class="ro-body">
+          <div class="ro-row"><span class="ro-key">in</span><span class="ro-val" id="auto-in"></span></div>
+          <div class="ro-pipe"><span id="auto-stage">&mdash;</span></div>
+          <div class="ro-row"><span class="ro-key">out</span><span class="ro-val out" id="auto-out"></span></div>
         </div>
-        <div class="readout-body">
-          <div class="ro-line"><span class="ro-k">in</span><span class="ro-v" id="auto-in"></span></div>
-          <div class="ro-wire"><span id="auto-stage">&mdash;</span></div>
-          <div class="ro-line"><span class="ro-k">out</span><span class="ro-v out" id="auto-out"></span></div>
-        </div>
-        <div class="readout-foot">
-          <span id="auto-id">mod-0000</span>
-          <span id="auto-count">0 stages</span>
-        </div>
+        <div class="ro-foot"><span id="auto-id">mod-0000</span><span id="auto-count">0 stages</span></div>
       </aside>
     </section>
 
-    <!-- ================= MARQUEE ================= -->
-    <div class="marquee" aria-hidden="true">
-      <div class="marquee-track" id="marquee-track"></div>
-    </div>
+    <!-- ============== MARQUEE ============== -->
+    <div class="marquee" aria-hidden="true"><div class="marquee-track" id="marquee-track"></div></div>
 
-    <!-- ================= WORKBENCH ================= -->
-    <section id="workbench" class="block">
-      <div class="block-head">
-        <p class="label">[ 01 ] &nbsp;workbench</p>
-        <h2>Build a pipeline</h2>
-        <p class="block-sub">
-          Every stage below is the real function, evaluated in your browser.
-          Feed it text, stack transformations, read the result.
-        </p>
+    <!-- ============== WORKBENCH ============== -->
+    <section id="workbench" class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">[ 01 ] workbench</p>
+          <h2 class="sec-title">Build a pipeline</h2>
+          <p class="sec-sub">Every card below runs the real function, in your browser. Type input, stack stages, and watch each step transform the value.</p>
+        </div>
+
+        <div class="bench">
+          <div class="pane">
+            <div class="pane-head"><span class="pane-num">a</span> input</div>
+            <textarea id="input" spellcheck="false" aria-label="Pipeline input">  Hello   WORLD -- My First Article!!  </textarea>
+            <div class="chips" id="chips"></div>
+          </div>
+
+          <div class="pane">
+            <div class="pane-head">
+              <span class="pane-num">b</span> pipeline
+              <span class="spacer"></span>
+              <span class="cat-meta" id="pipe-count">0 stages</span>
+              <button class="btn btn-sm btn-ghost" id="clear" type="button">clear</button>
+            </div>
+            <div class="search">
+              <svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="stage-search" type="text" placeholder="Search the registry…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="suggestions" aria-label="Search stages to add" />
+              <ul id="suggestions" class="suggest" role="listbox" hidden></ul>
+            </div>
+            <ol id="pipeline" class="pipeline"></ol>
+            <p id="pipeline-empty" class="empty-hint">&mdash; no stages yet. Search above, or tap a chip.</p>
+          </div>
+
+          <div class="pane pane-out">
+            <div class="pane-head"><span class="pane-num">c</span> output</div>
+            <pre id="output" class="output" aria-live="polite"></pre>
+            <div class="out-foot">
+              <button class="btn btn-sm copy" data-copy-target="output" type="button">copy</button>
+              <button class="btn btn-sm" id="to-workbench" type="button" hidden>add all to pipeline</button>
+              <span class="status" id="output-status"></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <div class="tablist" role="tablist" aria-label="Equivalent code">
+            <button class="tab" role="tab" id="tab-node" aria-controls="panel-node" aria-selected="true" type="button">node</button>
+            <button class="tab" role="tab" id="tab-cli" aria-controls="panel-cli" aria-selected="false" type="button">shell</button>
+            <button class="tab" role="tab" id="tab-spec" aria-controls="panel-spec" aria-selected="false" type="button">pipeline.json</button>
+            <span class="spacer"></span>
+            <button class="tab" id="copy-code" type="button">copy code</button>
+          </div>
+          <div class="tabpanel" id="panel-node" role="tabpanel" aria-labelledby="tab-node"><pre class="code" id="code-node"></pre></div>
+          <div class="tabpanel" id="panel-cli" role="tabpanel" aria-labelledby="tab-cli" hidden><pre class="code" id="code-cli"></pre></div>
+          <div class="tabpanel" id="panel-spec" role="tabpanel" aria-labelledby="tab-spec" hidden><pre class="code" id="code-spec"></pre></div>
+        </div>
       </div>
-
-      <div class="bench">
-        <div class="pane pane-in">
-          <div class="pane-head"><span class="pane-n">a</span> input</div>
-          <textarea id="input" spellcheck="false">  Hello   WORLD -- My First Article!!  </textarea>
-          <div class="chips">
-            <button class="chip" data-add="Uppercase">uppercase</button>
-            <button class="chip" data-add='Slug with "-"'>slug</button>
-            <button class="chip" data-add="Base64 encode">base64</button>
-            <button class="chip" data-add="Reverse characters">reverse</button>
-            <button class="chip" data-add="Caesar shift +1">caesar+1</button>
-          </div>
-        </div>
-
-        <div class="pane pane-stack">
-          <div class="pane-head">
-            <span class="pane-n">b</span> pipeline
-            <button id="clear" class="clear">clear</button>
-          </div>
-          <div class="search-wrap">
-            <input id="stage-search" type="text" placeholder="search the registry&hellip;" autocomplete="off" />
-            <ul id="suggestions" class="suggestions" hidden></ul>
-          </div>
-          <ol id="pipeline" class="pipeline"></ol>
-          <p id="pipeline-empty" class="empty-hint">&mdash; no stages yet</p>
-        </div>
-
-        <div class="pane pane-out">
-          <div class="pane-head"><span class="pane-n">c</span> output</div>
-          <pre id="output" class="output"></pre>
-          <div class="out-foot">
-            <button class="copy" data-copy-target="output">copy</button>
-            <span id="output-status" class="status"></span>
-          </div>
-        </div>
-      </div>
-
-      <details class="eq">
-        <summary><span class="label-inline">[ eq ]</span> equivalent code</summary>
-        <pre id="code-out" class="code"></pre>
-      </details>
     </section>
 
-    <!-- ================= REGISTRY ================= -->
-    <section id="registry" class="block">
-      <div class="block-head">
-        <p class="label">[ 02 ] &nbsp;registry</p>
-        <h2>What's in the box</h2>
-      </div>
+    <!-- ============== CATALOG ============== -->
+    <section id="catalog" class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">[ 02 ] catalog</p>
+          <h2 class="sec-title">Browse the whole registry</h2>
+          <p class="sec-sub">Search by effect, id or description. Click any card to push it onto your pipeline above.</p>
+        </div>
 
-      <div class="stats">
-        <div class="stat"><span class="stat-n" id="stage-count">4,658</span><span class="stat-l">unique stages</span></div>
-        <div class="stat"><span class="stat-n">100%</span><span class="stat-l">pure &amp; frozen</span></div>
-        <div class="stat"><span class="stat-n">0</span><span class="stat-l">dependencies</span></div>
-        <div class="stat"><span class="stat-n" id="cat-count">16</span><span class="stat-l">families</span></div>
-      </div>
+        <div class="cat-tools">
+          <div class="cat-row">
+            <div class="search">
+              <svg class="ico" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+              <input id="catalog-search" type="search" placeholder="Filter stages… (try: slug, caesar, base64)" aria-label="Filter catalog" />
+            </div>
+            <span class="cat-meta" id="catalog-meta"></span>
+          </div>
+          <div class="filters" id="filters" role="group" aria-label="Filter by family"></div>
+        </div>
 
-      <div id="categories" class="bars"></div>
+        <div class="cat-grid" id="catalog-grid"></div>
+        <p class="no-results" id="catalog-empty" hidden>No stages match that filter.</p>
+        <div class="cat-more"><button class="btn" id="catalog-more" type="button">Load more</button></div>
+      </div>
     </section>
 
-    <!-- ================= API / CLI ================= -->
-    <section id="api" class="block">
-      <div class="block-head">
-        <p class="label">[ 03 ] &nbsp;interface</p>
-        <h2>From code, or from the shell</h2>
+    <!-- ============== REGISTRY ============== -->
+    <section id="registry" class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">[ 03 ] registry</p>
+          <h2 class="sec-title">What's in the box</h2>
+        </div>
+        <div class="stat-grid">
+          <div class="stat"><span class="stat-n" id="stage-count">4,658</span><span class="stat-l">unique stages</span></div>
+          <div class="stat"><span class="stat-n">100<span class="u">%</span></span><span class="stat-l">pure &amp; frozen</span></div>
+          <div class="stat"><span class="stat-n">0</span><span class="stat-l">dependencies</span></div>
+          <div class="stat"><span class="stat-n" id="cat-count">16</span><span class="stat-l">families</span></div>
+        </div>
+        <div id="categories" class="bars"></div>
       </div>
+    </section>
 
-      <div class="duo">
-        <div class="code-pane">
-          <div class="code-head">node</div>
-          <pre class="code"><code>const { registry, createPipeline } = require('stagekit-js');
-
-const pipe = createPipeline([
-  registry.findByName('Trim lines')[0],
-  registry.findByName('Slug with "-"')[0],
-]);
-
-pipe('  Hello   World  ');   // 'hello-world'
-
-registry.search('caesar');  // 25 stages
-registry.get('mod-0002');   // one exact stage</code></pre>
+    <!-- ============== FAQ ============== -->
+    <section id="faq" class="section">
+      <div class="wrap">
+        <div class="sec-head">
+          <p class="eyebrow">[ 04 ] faq</p>
+          <h2 class="sec-title">Questions, answered</h2>
         </div>
-        <div class="code-pane">
-          <div class="code-head">shell</div>
-          <pre class="code"><code><span class="c-p">$</span> echo "My Article Title" | stagekit run \
-      'Slug with "-"' 'Base64 encode'
-bXktYXJ0aWNsZS10aXRsZQ==
-
-<span class="c-p">$</span> stagekit search caesar
-25 match(es)
-
-<span class="c-p">$</span> stagekit show mod-0002
-id          mod-0002
-name        Caesar shift +1</code></pre>
-        </div>
+        <div class="faq" id="faq-list"></div>
       </div>
     </section>
   </main>
 
-  <footer class="foot">
-    <span>stagekit-js</span>
-    <span class="foot-sep">/</span>
-    <span>MIT</span>
-    <span class="foot-sep">/</span>
+  <footer class="foot wrap">
+    <span>stagekit-js</span><span class="sep">/</span>
+    <span>MIT</span><span class="sep">/</span>
     <a href="https://github.com/HussainAlkhatib" target="_blank" rel="noopener">hussain alkhatib</a>
-    <span class="foot-right">
+    <span class="right">
       <a href="https://github.com/HussainAlkhatib/stagekit-js" target="_blank" rel="noopener">source</a>
       <a href="https://github.com/HussainAlkhatib/stagekit-js/blob/main/docs/CATALOG.md" target="_blank" rel="noopener">catalog</a>
     </span>
   </footer>
+
+  <!-- ============== COMMAND PALETTE ============== -->
+  <div class="palette" id="palette" role="dialog" aria-modal="true" aria-label="Search stages">
+    <div class="palette-scrim" data-palette-close></div>
+    <div class="palette-box">
+      <input id="palette-input" type="text" placeholder="Search stages…" autocomplete="off" aria-label="Search stages" aria-controls="palette-list" />
+      <ul class="palette-list" id="palette-list" role="listbox" aria-label="Results"></ul>
+      <div class="palette-foot">
+        <span><span class="kbd">&uarr;</span><span class="kbd">&darr;</span> navigate</span>
+        <span><span class="kbd">&crarr;</span> add to pipeline</span>
+        <span><span class="kbd">esc</span> close</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="./assets/stages.js"></script>
   <script src="./assets/app.js"></script>
